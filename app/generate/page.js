@@ -15,7 +15,7 @@ import {
   Grid,
   Card,
   CardContent,
-    
+  CardActionArea
 } from '@mui/material'
 import { doc, collection, getDoc, writeBatch } from "firebase/firestore"
 import { db } from "../utils/firebase"
@@ -26,23 +26,24 @@ export default function Generate() {
   const [flashcards, setFlashcards] = useState([])
   const [setName, setSetName] = useState('')
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [flipped, setFlipped] = useState({})
   const { user } = useUser();
 
   const handleOpenDialog = () => setDialogOpen(true)
-  const handleCloseDialog = () => setDialogOpen(false) 
+  const handleCloseDialog = () => setDialogOpen(false)
 
   const saveFlashcards = async () => {
     if (!setName.trim()) {
       alert('Please enter a name for your flashcard set.')
       return
     }
-  
+
     try {
       const userDocRef = doc(collection(db, 'users'), user.id)
       const userDocSnap = await getDoc(userDocRef)
-  
+
       const batch = writeBatch(db)
-  
+
       if (userDocSnap.exists()) {
         const userData = userDocSnap.data()
         const updatedSets = [...(userData.flashcardSets || []), { name: setName }]
@@ -50,12 +51,12 @@ export default function Generate() {
       } else {
         batch.set(userDocRef, { flashcardSets: [{ name: setName }] })
       }
-  
+
       const setDocRef = doc(collection(userDocRef, 'flashcardSets'), setName)
       batch.set(setDocRef, { flashcards })
-  
+
       await batch.commit()
-  
+
       alert('Flashcards saved successfully!')
       handleCloseDialog()
       setSetName('')
@@ -86,6 +87,13 @@ export default function Generate() {
     }
   }
 
+  const handleCardClick = (index) => {
+    setFlipped((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
   return (
     <Container maxWidth="md">
       <Box sx={{ my: 4 }}>
@@ -93,7 +101,6 @@ export default function Generate() {
           Generate Flashcards
         </Typography>
         <TextField
-          
           value={text}
           onChange={(e) => setText(e.target.value)}
           label="Enter text"
@@ -101,9 +108,7 @@ export default function Generate() {
           multiline
           rows={4}
           variant="outlined"
-          sx={{ mb: 2,
-            bgcolor:'#fff'
-            }}  
+          sx={{ mb: 2, bgcolor:'#fff' }}  
         />
         <Button
           variant="contained"
@@ -122,12 +127,13 @@ export default function Generate() {
             {flashcards.map((flashcard, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
                 <Card>
-                    <CardContent>
-                    <Typography variant="h6">Front:</Typography>
-                    <Typography>{flashcard.front}</Typography>
-                    <Typography variant="h6" sx={{ mt: 2 }}>Back:</Typography>
-                    <Typography>{flashcard.back}</Typography>
-                    </CardContent>
+                    <CardActionArea onClick={() => handleCardClick(index)}>
+                        <CardContent>
+                            <Typography variant="h6">
+                                {flipped[index] ? flashcard.back : flashcard.front}
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
                 </Card>
                 </Grid>
             ))}
@@ -142,7 +148,6 @@ export default function Generate() {
         </Box>
         )}
       </Box>
-      {/* We'll add flashcard display here */}
       <Dialog open={dialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>Save Flashcard Set</DialogTitle>
         <DialogContent>
