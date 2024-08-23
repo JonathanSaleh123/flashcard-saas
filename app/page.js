@@ -51,13 +51,13 @@ export default function Home() {
             <Typography variant="h6" style={{flexGrow: 1}}>
               Flashcard SaaS
             </Typography>
-            {/* <SignedOut>
+            <SignedOut>
               <Button color="inherit" href="/sign-in">Login</Button>
               <Button color="inherit" href="/sign-up">Sign Up</Button>
             </SignedOut>
             <SignedIn>
               <UserButton />
-            </SignedIn> */}
+            </SignedIn> 
           </Toolbar>
         </AppBar>
         
@@ -90,9 +90,9 @@ export default function Home() {
               <Grid item xs={12} sm={4}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h5" component="div">Feature 1</Typography>
+                    <Typography variant="h5" component="div">Personalized Learning</Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Description of feature 1.
+                    Our AI tailors each flashcard to match your unique learning style, ensuring that you grasp concepts quickly and effectively. Study smarter with customized content that evolves as you progress.
                     </Typography>
                   </CardContent>
                 </Card>
@@ -100,9 +100,9 @@ export default function Home() {
               <Grid item xs={12} sm={4}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h5" component="div">Feature 2</Typography>
+                    <Typography variant="h5" component="div">Instant Flashcard Creation</Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Description of feature 2.
+                    Input any text, and our advanced AI instantly transforms it into comprehensive flashcards. Save time and focus on learning with instant, high-quality flashcards generated at the click of a button.
                     </Typography>
                   </CardContent>
                 </Card>
@@ -110,9 +110,9 @@ export default function Home() {
               <Grid item xs={12} sm={4}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h5" component="div">Feature 3</Typography>
+                    <Typography variant="h5" component="div">Multi-Platform Access</Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Description of feature 3.
+                    Study anywhere, anytime, on any device. Your flashcards are seamlessly synchronized across all your devices, allowing you to continue learning no matter where you are.
                     </Typography>
                   </CardContent>
                 </Card>
