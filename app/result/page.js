@@ -1,3 +1,10 @@
+'use client'
+import React, { useEffect, useState } from 'react';
+import { Container, Box, Typography, CircularProgress } from '@mui/material';
+import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
+
+
 const ResultPage = () => {
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -68,5 +75,6 @@ const ResultPage = () => {
           )}
         </Container>
       )
-    // ... (rest of the component)
   }
+
+  export default ResultPage;

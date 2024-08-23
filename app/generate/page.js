@@ -89,6 +89,7 @@ export default function Generate() {
           Generate Flashcards
         </Typography>
         <TextField
+          
           value={text}
           onChange={(e) => setText(e.target.value)}
           label="Enter text"
@@ -96,7 +97,9 @@ export default function Generate() {
           multiline
           rows={4}
           variant="outlined"
-          sx={{ mb: 2 }}
+          sx={{ mb: 2,
+            bgcolor:'#fff'
+            }}  
         />
         <Button
           variant="contained"

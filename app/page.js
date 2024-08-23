@@ -2,26 +2,26 @@
 
 import Image from "next/image";
 import styles from "./page.module.css";
-// import { getStripe } from './utils/get-stripejs'
+import { getStripe } from './utils/get-stripe'
 import { useUser, SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
-import { AppBar, Toolbar, Typography, Button, Box, Grid, Container, CssBaseline, ThemeProvider, createTheme } from '@mui/material'
+import { AppBar, Toolbar, Typography, Button, Box, Grid, Container, CssBaseline,  Card, CardContent, CardActions,  List, ListItem, ListItemIcon, ListItemText, ThemeProvider, createTheme } from '@mui/material'
 
-// const handleSubmit = async () => {
-//   const checkoutSession = await fetch('/api/checkout_sessions', {
-//     method: 'POST',
-//     headers: { origin: 'http://localhost:3000' },
-//   })
-//   const checkoutSessionJson = await checkoutSession.json()
+const handleSubmit = async () => {
+  const checkoutSession = await fetch('/api/checkout_sessions', {
+    method: 'POST',
+    headers: { origin: 'http://localhost:3000' },
+  })
+  const checkoutSessionJson = await checkoutSession.json()
 
-//   const stripe = await getStripe()
-//   const {error} = await stripe.redirectToCheckout({
-//     sessionId: checkoutSessionJson.id,
-//   })
+  const stripe = await getStripe()
+  const {error} = await stripe.redirectToCheckout({
+    sessionId: checkoutSessionJson.id,
+  })
 
-//   if (error) {
-//     console.warn(error.message)
-//   }
-// }
+  if (error) {
+    console.warn(error.message)
+  }
+}
 
 const darkTheme = createTheme({
   palette: {
@@ -45,6 +45,7 @@ export default function Home() {
         overflow: 'hidden',
         position: 'relative',
       }}>
+        {/* Navigation */}
         <AppBar position="static" color="transparent" elevation={0}>
           <Toolbar>
             <Typography variant="h6" style={{flexGrow: 1}}>
@@ -60,6 +61,7 @@ export default function Home() {
           </Toolbar>
         </AppBar>
         
+        {/* Hero */}
         <Container maxWidth="md">
           <Box sx={{
             textAlign: 'center',
@@ -78,22 +80,77 @@ export default function Home() {
             <Button variant="contained" color="primary" sx={{mt: 2, mr: 2}} href="/generate">
               Get Started
             </Button>
-            <Button variant="outlined" color="primary" sx={{mt: 2}}>
-              Learn More
-            </Button>
+
           </Box>
 
-          <Box sx={{my: 6}}>
+          {/* Features */}
+          <Box sx={{ my: 6, textAlign: 'center' }}>
             <Typography variant="h4" component="h2" gutterBottom>Features</Typography>
-            <Grid container spacing={4}>
-              {/* Feature items */}
+            <Grid container spacing={4} justifyContent="center">
+              <Grid item xs={12} sm={4}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h5" component="div">Feature 1</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Description of feature 1.
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h5" component="div">Feature 2</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Description of feature 2.
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h5" component="div">Feature 3</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Description of feature 3.
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
             </Grid>
           </Box>
 
-          <Box sx={{my: 6, textAlign: 'center'}}>
+
+          {/* Pricing */}
+          <Box sx={{ my: 6, textAlign: 'center' }}>
             <Typography variant="h4" component="h2" gutterBottom>Pricing</Typography>
             <Grid container spacing={4} justifyContent="center">
-              {/* Pricing plans */}
+              <Grid item xs={12} sm={4}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h5" component="div">Free Plan</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Basic features for personal use.
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button size="small" variant="contained" color="primary" href="/generate">Get Started</Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h5" component="div">Premium Plan</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Advanced features for professionals.
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button size="small" variant="contained" color="primary" onClick={handleSubmit}>Get Started</Button>
+                  </CardActions>
+                </Card>
+              </Grid>
             </Grid>
           </Box>
         </Container>
@@ -102,51 +159,3 @@ export default function Home() {
   );
 }
 
-// export default function Home() {
-//   return (
-    
-//     <AppBar position="static">
-
-//     <Toolbar>
-//       <Typography variant="h6" style={{flexGrow: 1}}>
-//         Flashcard SaaS
-//       </Typography>
-//       {/* <SignedOut>
-//         <Button color="inherit" href="/sign-in">Login</Button>
-//         <Button color="inherit" href="/sign-up">Sign Up</Button>
-//       </SignedOut>
-//       <SignedIn>
-//         <UserButton />
-//       </SignedIn> */}
-//     </Toolbar>
-
-//     <Box sx={{textAlign: 'center', my: 4}}>
-//     <Typography variant="h2" component="h1" gutterBottom>
-//         Welcome to Flashcard SaaS
-//       </Typography>
-//       <Typography variant="h5" component="h2" gutterBottom>
-//         The easiest way to create flashcards from your text.
-//       </Typography>
-//       <Button variant="contained" color="primary" sx={{mt: 2, mr: 2}} href="/generate">
-//         Get Started
-//       </Button>
-//       <Button variant="outlined" color="primary" sx={{mt: 2}}>
-//         Learn More
-//       </Button>
-//     </Box>
-//     <Box sx={{my: 6}}>
-//     <Typography variant="h4" component="h2" gutterBottom>Features</Typography>
-//     <Grid container spacing={4}>
-//       {/* Feature items */}
-//     </Grid>
-//   </Box>
-// <Box sx={{my: 6, textAlign: 'center'}}>
-//   <Typography variant="h4" component="h2" gutterBottom>Pricing</Typography>
-//   <Grid container spacing={4} justifyContent="center">
-//     {/* Pricing plans */}
-//   </Grid>
-// </Box>
-//   </AppBar>
-
-//   );
-// }
