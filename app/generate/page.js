@@ -17,12 +17,16 @@ import {
   CardContent,
     
 } from '@mui/material'
+import { doc, collection, getDoc, writeBatch } from "firebase/firestore"
+import { db } from "../utils/firebase"
+import { useUser } from '@clerk/nextjs';
 
 export default function Generate() {
   const [text, setText] = useState('')
   const [flashcards, setFlashcards] = useState([])
   const [setName, setSetName] = useState('')
   const [dialogOpen, setDialogOpen] = useState(false)
+  const { user } = useUser();
 
   const handleOpenDialog = () => setDialogOpen(true)
   const handleCloseDialog = () => setDialogOpen(false) 
