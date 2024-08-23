@@ -1,9 +1,14 @@
 'use client'
 
 import React from 'react';
+import AppLayout from '../AppLayout';
+import AuthenticatedLayout from '../Authenticated';
+import { useState } from 'react'
 import { Container, Box, Typography, AppBar, Button, Toolbar, ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { SignIn } from '@clerk/nextjs';
+import { useUser, SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
 import Link from 'next/link';
+import App from 'next/app';
 
 const darkTheme = createTheme({
   palette: {
@@ -20,26 +25,33 @@ const darkTheme = createTheme({
 
 export default function SignInPage() {
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <Box sx={{
-        minHeight: '100vh',
-        background: 'radial-gradient(circle at 50% 50%, #1a237e 0%, #121212 100%)',
-        overflow: 'hidden',
-        position: 'relative',
-      }}>
+    <AppLayout>
+      <AuthenticatedLayout>
+         {/* Navigation */}
         <AppBar position="static" color="transparent" elevation={0}>
-          <Toolbar>
-            <Typography variant="h6" sx={{ flexGrow: 1 }}>
-              Flashcard SaaS
-            </Typography>
-            <Button color="inherit">
-              <Link href="/sign-up" passHref>
-                Sign Up
-              </Link>
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            CardDrop
+          </Typography>
+          <Button color="inherit" href="/" sx={{ mx: 2 }}>
+            Home
+          </Button>
+          <Button color="inherit" href="/generate" sx={{ mx: 2 }}>
+            Generate
+          </Button>
+          <Button color="inherit" href="/flashcards" sx={{ mx: 2 }}>
+            Saved Cards
+          </Button>
+          <SignedOut>
+            <Button color="inherit" href="/sign-in" sx={{ mx: 2 }}>
+              Sign-In
             </Button>
-          </Toolbar>
-        </AppBar>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </Toolbar>
+      </AppBar>
         <Container maxWidth="sm" sx={{ textAlign: 'center', mt: 4 }}>
           <Box sx={{
             p: 4,
@@ -50,7 +62,7 @@ export default function SignInPage() {
             <SignIn routing="hash" />
           </Box>
         </Container>
-      </Box>
-    </ThemeProvider>
+      </AuthenticatedLayout>
+    </AppLayout>
   );
 }

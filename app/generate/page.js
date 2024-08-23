@@ -1,11 +1,15 @@
 'use client'
 
 import { useState } from 'react'
+import AppLayout from '../AppLayout';
+import AuthenticatedLayout from '../Authenticated';
 import {
+  AppBar,
   Container,
   TextField,
   Button,
   Typography,
+  Toolbar,
   Box,
   Dialog,
   DialogTitle,
@@ -15,11 +19,13 @@ import {
   Grid,
   Card,
   CardContent,
-  CardActionArea
+  CardActionArea,
+  CircularProgress
 } from '@mui/material'
 import { doc, collection, getDoc, writeBatch } from "firebase/firestore"
 import { db } from "../utils/firebase"
-import { useUser } from '@clerk/nextjs';
+import { useUser, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+
 
 export default function Generate() {
   const [text, setText] = useState('')
@@ -27,6 +33,7 @@ export default function Generate() {
   const [setName, setSetName] = useState('')
   const [dialogOpen, setDialogOpen] = useState(false)
   const [flipped, setFlipped] = useState({})
+  const [loading, setLoading] = useState(false);
   const { user } = useUser();
 
   const handleOpenDialog = () => setDialogOpen(true)
@@ -71,6 +78,7 @@ export default function Generate() {
       alert('Please enter some text to generate flashcards.')
       return
     }
+    setLoading(true)
     try {
       const response = await fetch('/api/generate', {
         method: 'POST',
@@ -84,6 +92,8 @@ export default function Generate() {
     } catch (error) {
       console.error('Error generating flashcards:', error)
       alert('An error occurred while generating flashcards. Please try again.')
+    } finally{
+      setLoading(false)
     }
   }
 
@@ -95,11 +105,40 @@ export default function Generate() {
   };
 
   return (
+    <AppLayout>
+      <AuthenticatedLayout>
+      {/* Navigation */}
+      <AppBar position="static" color="transparent" elevation={0}>
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            CardDrop
+          </Typography>
+          <Button color="inherit" href="/" sx={{ mx: 2 }}>
+            Home
+          </Button>
+          <Button color="inherit" href="/generate" sx={{ mx: 2 }}>
+            Generate
+          </Button>
+          <Button color="inherit" href="/flashcards" sx={{ mx: 2 }}>
+            Saved Cards
+          </Button>
+          <SignedOut>
+            <Button color="inherit" href="/sign-in" sx={{ mx: 2 }}>
+              Sign-In
+            </Button>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </Toolbar>
+      </AppBar>
     <Container maxWidth="md">
       <Box sx={{ my: 4 }}>
+
         <Typography variant="h4" component="h1" gutterBottom>
           Generate Flashcards
         </Typography>
+
         <TextField
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -108,8 +147,9 @@ export default function Generate() {
           multiline
           rows={4}
           variant="outlined"
-          sx={{ mb: 2, bgcolor:'#fff' }}  
+          sx={{ mb: 2}}  
         />
+        
         <Button
           variant="contained"
           color="primary"
@@ -118,6 +158,12 @@ export default function Generate() {
         >
           Generate Flashcards
         </Button>
+        
+        {loading && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+            <CircularProgress />
+          </Box>
+        )}
         {flashcards.length > 0 && (
         <Box sx={{ mt: 4 }}>
             <Typography variant="h5" component="h2" gutterBottom>
@@ -126,10 +172,20 @@ export default function Generate() {
             <Grid container spacing={2}>
             {flashcards.map((flashcard, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card>
+                <Card sx={{ 
+                    width: 250, 
+                    height: 200, 
+                    bgcolor: flipped[index] ? 'rgba(0, 0, 240, 0.8)' : 'rgba(0, 0, 139, 0.3)',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+                    backdropFilter: 'blur(10px)', 
+                    color: 'white', 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    alignItems: 'center' 
+                  }}>
                     <CardActionArea onClick={() => handleCardClick(index)}>
                         <CardContent>
-                            <Typography variant="h6">
+                            <Typography variant="h6" align='center'>
                                 {flipped[index] ? flashcard.back : flashcard.front}
                             </Typography>
                         </CardContent>
@@ -172,5 +228,7 @@ export default function Generate() {
         </DialogActions>
         </Dialog>
     </Container>
+    </AuthenticatedLayout>  
+    </AppLayout>
   )
 }
